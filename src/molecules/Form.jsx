@@ -5,7 +5,7 @@ import Label from "../atoms/Label";
 import Button from "../atoms/Button";
 import { Link } from "react-router-dom";
 
-const Form = ({ formTitle, fields, onSubmit, className }) => {
+const Form = ({ formTitle, fields, onSubmit, className, helperText, link }) => {
   return (
     <form className={`form ${className}`} onSubmit={onSubmit}>
       {formTitle && (
@@ -25,8 +25,8 @@ const Form = ({ formTitle, fields, onSubmit, className }) => {
         </div>
       ))}
       <p className="block md:hidden text-center">
-        Dont have account?{" "}
-        <Link className="text-blue-500" to={"/register"}>
+        {helperText}{" "}
+        <Link className="text-blue-500" to={link}>
           click here
         </Link>
       </p>
@@ -41,6 +41,7 @@ Form.defaultProps = {
   fields: [],
   onSubmit: () => {},
   className: "",
+  helperText: "Already have a account?",
 };
 
 export default Form;
