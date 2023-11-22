@@ -1,14 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Form from "../molecules/Form";
 import Button from "../atoms/Button";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const { isLogin } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    isLogin && navigate("/");
+  }, [isLogin]);
 
   const handleRegister = async (email, password) => {
     try {
@@ -16,9 +24,26 @@ export default function RegisterPage() {
         email,
         password,
       });
-      console.log("Response:", response).data;
+      console.log("Response:", response.data);
+
+      toast.success(
+        `Register Berhasil silahkan login. anda akan diarahakan ke halaman login`,
+        {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }
+      );
+      setTimeout(() => {
+        navigate("/login");
+      }, 5000);
     } catch (error) {
-      toast.error(`${error.response.data.error}`, {
+      toast.error(`${error.response.data?.error}`, {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -54,9 +79,9 @@ export default function RegisterPage() {
             },
           ]}
           helperText={"Already have a account?"}
+          helperTextLink={"click here"}
           link={"/login"}
           onSubmit={(e) => {
-            // Handle form submission
             e.preventDefault();
             handleRegister(email, password);
           }}

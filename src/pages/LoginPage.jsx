@@ -66,12 +66,11 @@ export default function LoginPage() {
             },
           ]}
           helperText={"Dont have a account?"}
+          helperTextLink={"click here"}
           link={"/register"}
           onSubmit={(e) => {
-            // Handle form submission
             e.preventDefault();
             handleLogin(email, password);
-            // Your form submission logic here
           }}
         />
       </div>
