@@ -1,10 +1,17 @@
 // src/__tests__/LoginPage.test.jsx
-import { render, fireEvent, screen, waitFor, describe, it } from "vitest";
+import { fireEvent, screen, waitFor, describe, it, mock } from "vitest";
 import LoginPage from "./LoginPage";
+import { render } from "@testing-library/react";
+import { JSDOM } from "jsdom";
+
+// Set up a simple DOM for the tests
+const dom = new JSDOM("<!doctype html><html><body></body></html>");
+global.document = dom.window.document;
+global.window = dom.window;
 
 describe("LoginPage Component", () => {
   it("renders login form correctly", async () => {
-    render(LoginPage);
+    render(<LoginPage />);
 
     // Check if the login form elements are present
     expect(screen.getByLabelText("Email")).toBeInTheDocument();
@@ -16,18 +23,18 @@ describe("LoginPage Component", () => {
     render(LoginPage);
 
     // Mock axios.post
-    globalThis.axios = {
-      post: jest
-        .fn()
-        .mockResolvedValue({ data: { token: "your_mocked_token" } }),
-    };
+    mock(
+      globalThis,
+      "axios.post",
+      mock.fn().mockResolvedValue({ data: { token: "your_mocked_token" } })
+    );
 
     // Fill in the login form
     fireEvent.input(screen.getByLabelText("Email"), {
-      target: { value: "test@example.com" },
+      target: { value: "eve.holt@reqres.in" },
     });
     fireEvent.input(screen.getByLabelText("Password"), {
-      target: { value: "password123" },
+      target: { value: "cityslicka" },
     });
 
     // Trigger the form submission
@@ -53,11 +60,13 @@ describe("LoginPage Component", () => {
     render(LoginPage);
 
     // Mock axios.post to throw an error
-    globalThis.axios = {
-      post: jest.fn().mockRejectedValue({
+    mock(
+      globalThis,
+      "axios.post",
+      mock.fn().rejects({
         response: { data: { error: "Invalid credentials" } },
-      }),
-    };
+      })
+    );
 
     // Fill in the login form
     fireEvent.input(screen.getByLabelText("Email"), {
