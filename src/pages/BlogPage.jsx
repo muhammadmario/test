@@ -13,19 +13,26 @@ import Form from "../molecules/Form";
 import Card from "../molecules/Card";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function BlogPage() {
   const [blogs, setBlogs] = useState([]);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [editingBlog, setEditingBlog] = useState(null);
-
+  const { isLogin } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const blogsCollectionRef = collection(db, "blogs");
 
   const fetchData = async () => {
     const data = await getDocs(blogsCollectionRef);
     setBlogs(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
+
+  useEffect(() => {
+    isLogin == false ? navigate("/login") : "";
+  }, [isLogin]);
 
   useEffect(() => {
     fetchData();

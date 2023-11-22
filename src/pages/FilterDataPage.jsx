@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../organisms/Navbar";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function FilterDataPage() {
+  const navigate = useNavigate();
+  const { isLogin } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    isLogin == false ? navigate("/login") : "";
+  }, [isLogin]);
+
   const data = {
     status: 1,
     message: "Sukses",
