@@ -11,6 +11,8 @@ import {
 } from "firebase/firestore";
 import Form from "../molecules/Form";
 import Card from "../molecules/Card";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function BlogPage() {
   const [blogs, setBlogs] = useState([]);
@@ -23,7 +25,6 @@ export default function BlogPage() {
   const fetchData = async () => {
     const data = await getDocs(blogsCollectionRef);
     setBlogs(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    console.log(blogs);
   };
 
   useEffect(() => {
@@ -32,6 +33,16 @@ export default function BlogPage() {
 
   const addPost = async () => {
     await addDoc(blogsCollectionRef, { title: title, desc: desc });
+    toast.success(`Successfull create`, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
     setTitle("");
     setDesc("");
     fetchData();
@@ -46,6 +57,16 @@ export default function BlogPage() {
   const updatePost = async () => {
     const blogDoc = doc(db, "blogs", editingBlog.id);
     await updateDoc(blogDoc, { title, desc });
+    toast.success(`Successfull edit`, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
     setTitle("");
     setDesc("");
     setEditingBlog(null);
@@ -55,6 +76,16 @@ export default function BlogPage() {
   const deletePost = async (id) => {
     const blogDoc = doc(db, "blogs", id);
     await deleteDoc(blogDoc);
+    toast.success(`Successfull Delete`, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
     fetchData();
   };
 
@@ -108,6 +139,7 @@ export default function BlogPage() {
             ))}
         </div>
       </section>
+      <ToastContainer />
     </>
   );
 }
